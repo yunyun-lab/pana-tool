@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PANA 在庫・情報共有ツール</title>
+<title>在庫・情報共有ツール</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;}
@@ -265,7 +265,7 @@ input,select,textarea,button{font-family:inherit;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 /* =====================================================================
-   PANA 在庫・情報共有ツール ＋ 概算見積り
+   在庫・情報共有ツール ＋ 概算見積り
    ---------------------------------------------------------------------
    ▼ Supabase に接続するには、下の2行に値を貼り付けてください。
      空のままだと「デモモード」（データは保存されません）で動きます。
@@ -653,7 +653,7 @@ function afterAuth(){
 function loginHtml(){
  var err='<div id="login-err" class="form-err"'+(loginErr?'':' style="display:none"')+'>'+esc(loginErr)+'</div>';
  if(DEMO){
-  return '<div class="login-card"><h2>PANA 在庫・情報共有ツール</h2>'
+  return '<div class="login-card"><h2>在庫・情報共有ツール</h2>'
    +'<div class="sub">デモモードです。お名前を入力して「はじめる」を押してください。'
    +'<br>（このモードではデータは保存されません）</div>'
    +err
@@ -661,7 +661,7 @@ function loginHtml(){
    +'<div class="field"><label>権限</label><select id="lg-role"><option>管理者</option><option>スタッフ</option></select></div>'
    +'<button class="btn btn-primary" style="width:100%" onclick="demoLogin()">はじめる</button></div>';
  }
- return '<div class="login-card"><h2>PANA 在庫・情報共有ツール</h2>'
+ return '<div class="login-card"><h2>在庫・情報共有ツール</h2>'
   +'<div class="sub">登録済みのメールアドレスとパスワードでログインしてください。</div>'
   +err
   +'<div class="field"><label>メールアドレス</label><input id="lg-email" type="email"></div>'
@@ -718,7 +718,7 @@ function render(){
 /* ---- header ---- */
 function headerHtml(){
  return '<div class="app-header">'
-  +'<span class="logo">PANA</span>'
+  +'<span class="logo">在庫</span>'
   +(DEMO?'<span class="tag demo">DEMO</span>':'<span class="tag live">本番</span>')
   +'<div class="nav">'
   +'<button class="'+(state.view==='inventory'?'active':'')+'" onclick="goView(\'inventory\')">在庫</button>'
@@ -1383,8 +1383,10 @@ function estimateHtml(){
   +'<div class="est-amount"><div class="lbl">お見積金額（税込）</div><div class="val" id="est-grand">'+fmtYen(t.total)+'</div></div>'
   +'</div>';
  h+='<div class="est-right">'
-  +'<div class="est-issuer"><div class="nm">株式会社PANA</div>'
-  +'大阪本社／名古屋・川崎・秋葉原営業所<br>映像・音響・照明・PA機材レンタル</div>'
+  +'<div class="est-issuer">'
+  +'<div class="nm"><input type="text" value="'+esc(est.issuer||'')+'" placeholder="自社名" oninput="est.issuer=this.value" style="border:0;background:transparent;font:inherit;color:inherit;text-align:right;width:100%;"></div>'
+  +'<input type="text" value="'+esc(est.issuerSub||'')+'" placeholder="住所・連絡先・事業内容など" oninput="est.issuerSub=this.value" style="border:0;background:transparent;font:inherit;color:inherit;text-align:right;width:100%;">'
+  +'</div>'
   +'<div class="est-metaline"><span>見積番号</span><input type="text" value="'+esc(est.estNo)+'" placeholder="任意" oninput="est.estNo=this.value"></div>'
   +'<div class="est-metaline"><span>発行日</span><input type="date" value="'+esc(est.issueDate)+'" onchange="est.issueDate=this.value"></div>'
   +'<div class="est-metaline"><span>担当者</span><input type="text" value="'+esc(est.staff)+'" placeholder="お名前" oninput="est.staff=this.value"></div>'
@@ -1493,7 +1495,7 @@ function estDownload(){
  aoa.push(['','','','','合計',t.total]);
  aoa.push([]);
  aoa.push(['備考',est.note||'']);
- aoa.push(['発行：株式会社PANA']);
+ if(est.issuer){aoa.push(['発行：'+est.issuer]);}
  var ws=XLSX.utils.aoa_to_sheet(aoa);
  ws['!cols']=[{wch:6},{wch:36},{wch:8},{wch:8},{wch:14},{wch:14}];
  var wb=XLSX.utils.book_new();
